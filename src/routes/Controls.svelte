@@ -31,20 +31,21 @@
 
 <div>
     {#if $playing}
-        <button class="material-symbols-outlined" on:click={() => playing.set(false)}> pause </button>
+        <button class="material-symbols-outlined" on:click={() => playing.set(false)} on:keydown={(e) => e.preventDefault()}> pause </button>
     {:else}
-        <button class="material-symbols-outlined" on:click={() => playing.set(true)}> play_arrow </button>
+        <button class="material-symbols-outlined" on:click={() => playing.set(true)} on:keydown={(e) => e.preventDefault()}> play_arrow </button>
     {/if}
 
-    <button class="material-symbols-outlined" on:click={() => dispatch('random')}> shuffle </button>
+    <button class="material-symbols-outlined" on:click={() => dispatch('random')} on:keydown={(e) => e.preventDefault()}> shuffle </button>
 
-    <button class="material-symbols-outlined" on:click={() => dispatch('reset')}> stop </button>
+    <button class="material-symbols-outlined" on:click={() => dispatch('reset')} on:keydown={(e) => e.preventDefault()}> stop </button>
 
-    <button class="material-symbols-outlined" on:click={() => dispatch('nextStep')}> step_over </button>
+    <button class="material-symbols-outlined" on:click={() => dispatch('nextStep')} on:keydown={(e) => e.preventDefault()}> step_over </button>
 
     <input type="range" min="250" max="1500" step="10" bind:value={$speed}>
-
 </div>
+
+
 
 <style lang="scss">
     div{

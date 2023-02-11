@@ -2,6 +2,7 @@
 	import { onDestroy, onMount } from "svelte";
 	import { playing, speed } from "../lib/stores";
 	import Controls from "./Controls.svelte";
+	import FigureSelector from "./FigureSelector.svelte";
 	import Grid from "./Grid.svelte";
     let sizes = [25, 35, 50];
     let innerWidth: number;
@@ -120,7 +121,7 @@
 <div class="wrapper">
     <Grid grid={grid} gridWidth={gridWidth} gridHeight={gridHeight}/>
     <Controls on:reset={() => grid = generateGrid()} on:random = {() => grid = generateRandomGrid()} on:nextStep={nextStep}/>
-  
+    <FigureSelector/>
   
 </div>
 

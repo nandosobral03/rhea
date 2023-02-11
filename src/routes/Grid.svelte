@@ -1,7 +1,42 @@
 <script lang="ts">
+	import { activeFigure } from "$lib/stores";
     export let grid: boolean[][];
     export let gridWidth: number;
     export let gridHeight: number;
+    let currentFigure: { grid: any; id?: number; };
+
+    activeFigure.subscribe((value) => {
+        currentFigure = value;
+    });
+
+    const setActive = (i: number, j: number) => {
+       for(let x = 0; x < currentFigure.grid.length; x++){
+           for(let y = 0; y < currentFigure.grid[0].length; y++){
+                if(currentFigure.grid[x][y]){
+                    grid[(i+x) % grid.length][(j+y) % grid[0].length] = true
+                }
+           }
+       }
+    };
+
+    const setHover = (i: number, j: number) => {
+        for(let x = 0; x < currentFigure.grid.length; x++){
+           for(let y = 0; y < currentFigure.grid[0].length; y++){
+                if(currentFigure.grid[x][y]){
+                    document.getElementById(((i+x) % grid.length) + "-" + ((j+y) % grid[0].length))?.classList.add("hover")
+                }
+           }
+       }
+    };
+
+    const removeHover = (i: number, j: number) => {
+        for(let x = 0; x < currentFigure.grid.length; x++){
+           for(let y = 0; y < currentFigure.grid[0].length; y++){
+                document.getElementById(((i+x) % grid.length) + "-" + ((j+y) % grid[0].length))?.classList.remove("hover")
+           }
+       }
+    }; 
+
 </script>
 
 
@@ -10,8 +45,9 @@
     {#each grid as row, i}
         {#each row as _, j}
             <button
+                id={i + "-" + j}
                 on:click={() => {
-                    grid[i][j] = !grid[i][j];
+                    setActive(i, j);
                 }}
                 class:alive={grid[i][j]}
                 on:keydown={(e) => {
@@ -24,12 +60,17 @@
                 }}
 
                 on:mouseenter={(e) => {
+                    setHover(i, j);
                     if (e.buttons === 1) {
-                        grid[i][j] = true;
+                        setActive(i, j);
                     }
                     if (e.buttons === 2) {
                         grid[i][j] = false;
                     }
+                }}
+
+                on:mouseleave={(e) => {
+                    removeHover(i, j);
                 }}
 
                 on:contextmenu={(e) => {
@@ -70,7 +111,14 @@
         width: 100%;
         outline: none;
         cursor: pointer;
-        transition: background-color 0.2s ease-in-out;
+
+       
+    }
+
+    .hover{
+            transition: background-color 0.2s ease-in-out;
+            background-color: red;
+
     }
 
     .alive{
