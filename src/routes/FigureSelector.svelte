@@ -36,13 +36,13 @@
         <div class="actions">
             <button on:click={() => adding = true}>
                 <span class="material-symbols-outlined">
-                    add_circle
+                    add
                 </span>
         </button>
         </div>
     {/if}
     {#if adding}
-        <AddFigure on:save={(f) => add(f.detail)}/>
+        <AddFigure on:save={(f) => add(f.detail)} on:close = {() => adding = false}/>
     {/if}
 
     {#key reload}
@@ -50,42 +50,46 @@
             <Figure grid={figure.grid} name={figure.name} id={figure.id} on:delete={() => deleteFigure(figure.id)}/>
         {/each}
     {/key}
+   
+
+
 </div>
+
+
+
 
 <style lang="scss">
     .wrapper{
-        position: fixed;
-        right: clamp(5px, 3%, 10px);
-        height: 90%;
+        height: 100%;
         width: fit-content;
-        min-width: 260px;
-        background-color: #505050;
-        border-radius: 5px;
-        overflow: auto;
+        min-width: 190px;
+        background-color: var(--background);
+        border-radius: 5px; 
+        overflow-y: auto;
+        padding: 5px;
     }
     .actions{
-        display: flex;
-        position: fixed;
-        top: 0;
-        right: 0;
+        width: 100%;
         justify-content: flex-end;
         padding: 5px;
         button{
-            background-color: transparent;
             border: none;
-            color: #fff;
+            background-color: var(--accent);
+            color: var(--background);
             line-height: 100%;
-            aspect-ratio: 1/1;
+            width: 100%;
             padding: 2px;
             display: flex;
             align-items: center;
+            justify-content: center;
             cursor: pointer;
             outline: none;
+            border-radius: 5px;
             &:hover{
-                background-color: #fff;
-                color: #505050;
-                border-radius: 5px;
+                background-color: var(--hover);
             }
         }
     }
+
+   
 </style>

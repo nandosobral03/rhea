@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { activeFigure } from "$lib/stores";
 	import { createEventDispatcher, onMount } from "svelte";
-
-
     export let grid: boolean[][];
-    export let name: string;
     export let id: number;
     let active: boolean;
     activeFigure.subscribe((value) => {
@@ -50,16 +47,15 @@
 <div class ="figure-wrapper"
     class:active={active}
         >
-    
-    {#if  active}
-        <div class="actions">
-            <button on:click={() => remove()}>
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-    {/if}
     <div class="figure" 
-    on:click={() => setActive()}
+    on:click={
+    () => setActive()
+    }
+    on:contextmenu={(e) => {
+        e.preventDefault();
+        remove();
+    }}
+
         on:keydown={(e) => {
             if(e.key === "Enter") active = !active;
         }}
@@ -76,23 +72,19 @@
 
 <style lang="scss">
      .figure {
-        background-color: #505050;
         height: fit-content;
-        color: #fff;
         padding: 1px;
         align-items: center;
         justify-content: center;
-        border: 5px solid   #303030;
+        padding: 5px;
         border-radius: 5px;
         aspect-ratio: 1/1;
         display: grid;
-        margin:5px;
     }
 
     .active{
-        > .figure{
-            border: 5px solid   #fff;
-        }
+        border: 2px solid var(--border-active);
+        border-radius: 5px;
     }
 
 
@@ -113,29 +105,8 @@
     }
 
     .alive{
-        background-color: #fff;
-        color: #505050;
-
-        
+        background-color: var(--accent);
     }
 
-    .actions{
-        display: flex;
-        justify-content: flex-end;
-        padding: 4px;
-        button{
-            aspect-ratio: 1/1;
-            background-color: #505050;
-            border: none;
-            color: #fff;
-            padding: 1px;
-            border-radius: 5px;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            &:hover{
-                background-color: #303030;
-            }
-        }
-    }
+  
 </style>
