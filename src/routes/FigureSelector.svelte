@@ -16,6 +16,7 @@
         adding = false;
         savedFigures.update((figures) => {
             figures.push({id: figures.length + 2, name: "New Figure", grid: f});
+            localStorage.setItem("figures", JSON.stringify(figures));
             return figures;
         });
 
@@ -24,6 +25,7 @@
     const deleteFigure = (id: number) => {
         savedFigures.update((figures) => {
             figures = figures.filter((f) => f.id !== id);
+            localStorage.setItem("figures", JSON.stringify(figures));
             return figures;
         });
         reload = !reload;
@@ -47,7 +49,7 @@
 
     {#key reload}
         {#each figures as figure}
-            <Figure grid={figure.grid} name={figure.name} id={figure.id} on:delete={() => deleteFigure(figure.id)}/>
+            <Figure grid={figure.grid} id={figure.id} on:delete={() => deleteFigure(figure.id)}/>
         {/each}
     {/key}
    

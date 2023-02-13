@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { activeFigure, playing, speed } from '../lib/stores';
+	import { activeFigure, playing, savedFigures, speed } from '../lib/stores';
 	import Controls from './Controls.svelte';
 	import FigureSelector from './FigureSelector.svelte';
 	import Grid from './Grid.svelte';
+	import Loading from './Loading.svelte';
+
 	let sizes = [20, 30, 50];
 	let innerWidth: number;
 	$: gridWidth = innerWidth > 750 ? sizes[2] : innerWidth > 500 ? sizes[1] : sizes[0];
@@ -16,7 +18,7 @@
 	let intervalNumber: number;
 	let playingValue: boolean = false;
 	let currentFigure: { id: number; grid: boolean[][]; };
-
+	let loading = true;
 	activeFigure.subscribe((value) => {
 		currentFigure = value;
 	});
@@ -46,8 +48,9 @@
 	});
 
 	onMount(() => {
-		innerWidth = window.innerWidth;
+		loading = false;
 
+		innerWidth = window.innerWidth;
 		function onResize() {
 			innerWidth = window.innerWidth;
 		}
@@ -64,6 +67,16 @@
 			if (e.key === 'e') rotateCurrentFigure("r");
 			if (e.key === 'q') rotateCurrentFigure("l");
 		});
+
+
+
+		const saved = localStorage.getItem('figures');
+		if (saved) {
+			const parsedFigures = JSON.parse(saved);
+			if (parsedFigures.length > 0) {
+				savedFigures.set(parsedFigures);
+			}
+		}
 	});
 
 
@@ -156,12 +169,19 @@
 <svelte:window bind:innerWidth />
 
 <div class="wrapper">
-	<Grid {grid} {gridWidth} {gridHeight} />
+	{#if loading}
+		<div class="loading">
+			<Loading/>
+		</div>
+	{:else}
+		<Grid {grid} {gridWidth} {gridHeight} />
 	<Controls
 		on:reset={() => (grid = generateGrid())}
 		on:random={() => (grid = generateRandomGrid())}
 		on:nextStep={nextStep}
 	/>
+	{/if}
+
 	<div class="selector" class:open={isOpen}>
 		<FigureSelector />
 		<button
@@ -228,4 +248,14 @@
 		transform: translateX(0px);
 		transition: transform 0.5s ease;
 	}
+
+	.loading{
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	
 </style>
